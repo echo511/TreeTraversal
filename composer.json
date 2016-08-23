@@ -1,0 +1,20 @@
+{
+    "name": "echo511/tree-traversal",
+    "type": "library",
+    "require": {
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.2"
+    },
+    "license": "MIT License",
+    "authors": [
+        {
+            "name": "Nikolas Tsiongas",
+            "email": "ntsiongas@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "classmap": ["src/"]
+    }
+}
