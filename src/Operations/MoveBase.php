@@ -4,6 +4,7 @@ namespace Echo511\TreeTraversal\Operations;
 
 abstract class MoveBase
 {
+
 	const INDEX_LFT = 'lft';
 	const INDEX_RGT = 'rgt';
 
@@ -17,6 +18,7 @@ abstract class MoveBase
 	 * Indexed and depth of head node.
 	 * @var array
 	 */
+
 	protected $head = [];
 
 	/**
@@ -53,12 +55,8 @@ abstract class MoveBase
 	public function run()
 	{
 		$this->pdo->beginTransaction();
-		try {
-			$this->doRun();
-			$this->pdo->commit();
-		} catch (\PDOException $ex) {
-			throw $ex;
-		}
+		$this->doRun();
+		$this->pdo->commit();
 	}
 
 	protected function doRun()
@@ -71,7 +69,7 @@ abstract class MoveBase
 		// update moving nodes
 		$this->updateIndexes($movingNodes, self::INDEX_LFT, $this->head['lft'], $this->head['rgt'], $shiftingNodesRange * -1 * $this->getMoveDirection());
 		$this->updateIndexes($movingNodes, self::INDEX_RGT, $this->head['lft'], $this->head['rgt'], $shiftingNodesRange * -1 * $this->getMoveDirection());
-		$this->updateDepths($movingNodes, $this->target['dpt'] - $this->head['dpt']);
+		$this->updateDepths($movingNodes, $this->getDepthModifier());
 
 		// update shifting nodes
 		$limits = $this->getShiftingIndexesLimits();
@@ -104,6 +102,8 @@ abstract class MoveBase
 	 */
 	abstract protected function getShiftingIndexesLimits();
 
+	abstract protected function getDepthModifier();
+
 	protected function getShiftingNodes()
 	{
 		$limits = $this->getShiftingIndexesLimits();
@@ -134,8 +134,12 @@ abstract class MoveBase
 	protected function getNodesBetween($min, $max)
 	{
 		$config = $this->config;
-		$sql = "SELECT $config[id] FROM $config[table] WHERE ($config[lft] >= $min AND $config[lft] <= $max) OR ($config[rgt] >= $min AND $config[rgt] <= $max);";
-		return $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+		$sql = "SELECT $config[id] AS id FROM $config[table] WHERE ($config[lft] >= :min AND $config[lft] <= :max) OR ($config[rgt] >= :min AND $config[rgt] <= :max);";
+		$sth = $this->pdo->prepare($sql);
+		$sth->bindParam('min', $min);
+		$sth->bindParam('max', $max);
+		$sth->execute();
+		return (array) $sth->fetchAll(\PDO::FETCH_COLUMN);
 	}
 
 	/**
@@ -151,11 +155,15 @@ abstract class MoveBase
 	 */
 	protected function updateIndexes($nodes, $index = self::INDEX_LFT, $lftLimit, $rgtLimit, $value)
 	{
-		$config = $this->config;
-		$in = str_repeat('?,', count($nodes) - 1) . '?';
-		$sql = "UPDATE $config[table] SET $config[$index] = $config[$index] + $value WHERE $config[$index] >= $lftLimit AND $config[$index] <= $rgtLimit AND $config[id] IN ($in);";
-		$stm = $this->pdo->prepare($sql);
-		$stm->execute($nodes);
+		$lftLimit = (int) $lftLimit;
+		$rgtLimit = (int) $rgtLimit;
+		if (count($nodes) > 0) {
+			$config = $this->config;
+			$in = str_repeat('?,', count($nodes) - 1) . '?';
+			$sql = "UPDATE $config[table] SET $config[$index] = $config[$index] + $value WHERE $config[$index] >= $lftLimit AND $config[$index] <= $rgtLimit AND $config[id] IN ($in);";
+			$stm = $this->pdo->prepare($sql);
+			$stm->execute($nodes);
+		}
 	}
 
 	/**
@@ -171,4 +179,5 @@ abstract class MoveBase
 		$stm = $this->pdo->prepare($sql);
 		$stm->execute($nodes);
 	}
+
 }

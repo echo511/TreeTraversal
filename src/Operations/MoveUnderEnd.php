@@ -40,5 +40,10 @@ class MoveUnderEnd extends MoveBase
 			]; // except head rgt and target rgt
 		}
 	}
+	
+	protected function getDepthModifier()
+	{
+		return $this->target['dpt'] - $this->head['dpt'] + 1;
+	}
 
 }

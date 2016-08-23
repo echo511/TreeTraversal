@@ -52,9 +52,37 @@ class Tree
 		}
 	}
 
+	public function moveNode($headId, $targetId = NULL, $mode = self::MODE_UNDER)
+	{
+		$head = $this->getNode($headId);
+		$target = $this->getNode($targetId);
+
+		switch ($mode) {
+			case self::MODE_BEFORE:
+				break;
+			case self::MODE_AFTER:
+				break;
+			case self::MODE_UNDER:
+				$operation = new Operations\MoveUnderEnd($head, $target, $this->config, $this->pdo);
+				break;
+		}
+
+		$operation->run();
+	}
+
 	public function deleteNode($id)
 	{
+		
+	}
 
+	protected function getNode($id)
+	{
+		$config = $this->config;
+		$sql = "SELECT $config[id] AS id, $config[lft] AS lft, $config[rgt] AS rgt, $config[dpt] AS dpt FROM $config[table] WHERE $config[id] = :id";
+		$sth = $this->pdo->prepare($sql);
+		$sth->bindParam(':id', $id);
+		$sth->execute();
+		return  $sth->fetch(\PDO::FETCH_ASSOC);
 	}
 
 }
