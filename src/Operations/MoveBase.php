@@ -61,20 +61,25 @@ abstract class MoveBase
 
 	protected function doRun()
 	{
-		$movingNodes = $this->getMovingNodes();
-		$movingNodesRange = $this->getMovingNodesRange();
-		$shiftingNodes = $this->getShiftingNodes();
-		$shiftingNodesRange = $this->getShiftingNodesRange();
+		$config = $this->config;
+		if ($this->target['id'] != $this->head['id']) {
+			$this->canMove();
 
-		// update moving nodes
-		$this->updateIndexes($movingNodes, self::INDEX_LFT, $this->head['lft'], $this->head['rgt'], $shiftingNodesRange * -1 * $this->getMoveDirection());
-		$this->updateIndexes($movingNodes, self::INDEX_RGT, $this->head['lft'], $this->head['rgt'], $shiftingNodesRange * -1 * $this->getMoveDirection());
-		$this->updateDepths($movingNodes, $this->getDepthModifier());
+			$movingNodes = $this->getMovingNodes();
+			$movingNodesRange = $this->getMovingNodesRange();
+			$shiftingNodes = $this->getShiftingNodes();
+			$shiftingNodesRange = $this->getShiftingNodesRange();
 
-		// update shifting nodes
-		$limits = $this->getShiftingIndexesLimits();
-		$this->updateIndexes($shiftingNodes, self::INDEX_LFT, $limits['min'], $limits['max'], $movingNodesRange * $this->getMoveDirection());
-		$this->updateIndexes($shiftingNodes, self::INDEX_RGT, $limits['min'], $limits['max'], $movingNodesRange * $this->getMoveDirection());
+			// update moving nodes
+			$this->updateIndexes($movingNodes, self::INDEX_LFT, $this->head['lft'], $this->head['rgt'], $shiftingNodesRange * -1 * $this->getMoveDirection());
+			$this->updateIndexes($movingNodes, self::INDEX_RGT, $this->head['lft'], $this->head['rgt'], $shiftingNodesRange * -1 * $this->getMoveDirection());
+			$this->updateDepths($movingNodes, $this->getDepthModifier());
+
+			// update shifting nodes
+			$limits = $this->getShiftingIndexesLimits();
+			$this->updateIndexes($shiftingNodes, self::INDEX_LFT, $limits['min'], $limits['max'], $movingNodesRange * $this->getMoveDirection());
+			$this->updateIndexes($shiftingNodes, self::INDEX_RGT, $limits['min'], $limits['max'], $movingNodesRange * $this->getMoveDirection());
+		}
 	}
 
 	/**
@@ -94,6 +99,11 @@ abstract class MoveBase
 	protected function getMovingNodesRange()
 	{
 		return $this->head['rgt'] - $this->head['lft'] + 1;
+	}
+
+	protected function canMove()
+	{
+		
 	}
 
 	/**
