@@ -77,6 +77,31 @@ class Tree
 		
 	}
 
+	/**
+	 * Is head node child of target node?
+	 * @param type $head
+	 * @param type $target
+	 */
+	public function isChildOf($head, $target)
+	{
+		if (!is_array($head)) {
+			$head = $this->getNode($head);
+		}
+		if (!is_array($target)) {
+			$target = $this->getNode($target);
+		}
+		$config = $this->config;
+		$headLft = $head[$config['lft']];
+		$headRgt = $head[$config['rgt']];
+		$targetLft = $target[$config['lft']];
+		$targetRgt = $target[$config['rgt']];
+		if ($headLft > $targetLft && $headRgt < $targetRgt) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	protected function getNode($id)
 	{
 		$config = $this->config;
