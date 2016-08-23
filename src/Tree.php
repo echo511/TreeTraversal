@@ -59,6 +59,7 @@ class Tree
 
 		switch ($mode) {
 			case self::MODE_BEFORE:
+				$operation = new Operations\MoveBefore($head, $target, $this->config, $this->pdo);
 				break;
 			case self::MODE_AFTER:
 				$operation = new Operations\MoveAfter($head, $target, $this->config, $this->pdo);

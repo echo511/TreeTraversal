@@ -237,4 +237,106 @@ class MoveCest
 		$I->assertEquals($expected, $actual);
 	}
 
+	public function testMoveBeforeLeft(UnitTester $I)
+	{
+		$this->tree->moveNode('E', 'A', \Echo511\TreeTraversal\Tree::MODE_BEFORE);
+		$sth = $this->pdo->prepare("SELECT title AS id, lft, rgt, dpt FROM tree");
+		$sth->execute();
+		$actual = array_map('reset', $sth->fetchAll(\PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
+		$expected = [
+			'A' => [
+				'lft' => 7,
+				'rgt' => 16,
+				'dpt' => 0,
+			],
+			'B' => [
+				'lft' => 8,
+				'rgt' => 9,
+				'dpt' => 1,
+			],
+			'C' => [
+				'lft' => 10,
+				'rgt' => 13,
+				'dpt' => 1,
+			],
+			'D' => [
+				'lft' => 11,
+				'rgt' => 12,
+				'dpt' => 2,
+			],
+			'E' => [
+				'lft' => 1,
+				'rgt' => 6,
+				'dpt' => 0,
+			],
+			'F' => [
+				'lft' => 2,
+				'rgt' => 3,
+				'dpt' => 1,
+			],
+			'G' => [
+				'lft' => 4,
+				'rgt' => 5,
+				'dpt' => 1,
+			],
+			'H' => [
+				'lft' => 14,
+				'rgt' => 15,
+				'dpt' => 1,
+			]
+		];
+		$I->assertEquals($expected, $actual);
+	}
+
+	public function testMoveBeforeRight(UnitTester $I)
+	{
+		$this->tree->moveNode('E', 'H', \Echo511\TreeTraversal\Tree::MODE_BEFORE);
+		$sth = $this->pdo->prepare("SELECT title AS id, lft, rgt, dpt FROM tree");
+		$sth->execute();
+		$actual = array_map('reset', $sth->fetchAll(\PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
+		$expected = [
+			'A' => [
+				'lft' => 1,
+				'rgt' => 16,
+				'dpt' => 0,
+			],
+			'B' => [
+				'lft' => 2,
+				'rgt' => 3,
+				'dpt' => 1,
+			],
+			'C' => [
+				'lft' => 4,
+				'rgt' => 7,
+				'dpt' => 1,
+			],
+			'D' => [
+				'lft' => 5,
+				'rgt' => 6,
+				'dpt' => 2,
+			],
+			'E' => [
+				'lft' => 8,
+				'rgt' => 13,
+				'dpt' => 1,
+			],
+			'F' => [
+				'lft' => 9,
+				'rgt' => 10,
+				'dpt' => 2,
+			],
+			'G' => [
+				'lft' => 11,
+				'rgt' => 12,
+				'dpt' => 2,
+			],
+			'H' => [
+				'lft' => 14,
+				'rgt' => 15,
+				'dpt' => 1,
+			]
+		];
+		$I->assertEquals($expected, $actual);
+	}
+
 }
