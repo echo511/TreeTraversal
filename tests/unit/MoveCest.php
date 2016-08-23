@@ -33,6 +33,13 @@ class MoveCest
 		
 	}
 
+	public function testMoveParentUnderChild(UnitTester $I)
+	{
+		$I->expectException('\Echo511\TreeTraversal\InvalidMoveExpcetion', function() {
+			$this->tree->moveNode('A', 'E', \Echo511\TreeTraversal\Tree::MODE_UNDER);
+		});
+	}
+
 	public function testMoveUnderEndLeft(UnitTester $I)
 	{
 		$this->tree->moveNode('H', 'D', \Echo511\TreeTraversal\Tree::MODE_UNDER);

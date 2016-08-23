@@ -65,7 +65,7 @@ class Tree
 				$operation = new Operations\MoveAfter($head, $target, $this->config, $this->pdo);
 				break;
 			case self::MODE_UNDER:
-				$operation = new Operations\MoveUnderEnd($head, $target, $this->config, $this->pdo);
+				$operation = new Operations\MoveUnderEnd($head, $target, $this->config, $this->pdo, $this);
 				break;
 		}
 
