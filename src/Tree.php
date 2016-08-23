@@ -61,6 +61,7 @@ class Tree
 			case self::MODE_BEFORE:
 				break;
 			case self::MODE_AFTER:
+				$operation = new Operations\MoveAfter($head, $target, $this->config, $this->pdo);
 				break;
 			case self::MODE_UNDER:
 				$operation = new Operations\MoveUnderEnd($head, $target, $this->config, $this->pdo);
@@ -82,7 +83,7 @@ class Tree
 		$sth = $this->pdo->prepare($sql);
 		$sth->bindParam(':id', $id);
 		$sth->execute();
-		return  $sth->fetch(\PDO::FETCH_ASSOC);
+		return $sth->fetch(\PDO::FETCH_ASSOC);
 	}
 
 }
