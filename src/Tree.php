@@ -159,6 +159,29 @@ class Tree
     }
 
     /**
+     * Get parents in order, the big boss first.
+     * @param type $headId
+     * @return type
+     */
+    public function getParents($headId)
+    {
+        $head = $this->getNode($headId);
+        $config = $this->config;
+        $parents = $this->table()
+                ->select(null)
+                ->select("$config[id] AS id")
+                ->where("$config[lft] < ?", $head['lft'])
+                ->where("$config[rgt] > ?", $head['rgt'])
+                ->where("$config[dpt] < ?", $head['dpt'])
+                ->orderBy($config['lft'])
+                ->fetchAll();
+
+        return array_map(function($key) {
+            return $key['id'];
+        }, $parents);
+    }
+
+    /**
      * @return FluentPDO
      * @internal
      */
