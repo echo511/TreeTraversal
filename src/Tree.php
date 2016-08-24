@@ -138,6 +138,27 @@ class Tree
     }
 
     /**
+     * Get IDs of children nodes.
+     * @param mixed $headId
+     * @return array
+     */
+    public function getChildren($headId)
+    {
+        $head = $this->getNode($headId);
+        $config = $this->config;
+        $children = $this->table()
+                ->select(null)
+                ->select("$config[id] AS id")
+                ->where("$config[lft] > ?", $head['lft'])
+                ->where("$config[rgt] < ?", $head['rgt'])
+                ->fetchAll();
+
+        return array_map(function($key) {
+            return $key['id'];
+        }, $children);
+    }
+
+    /**
      * @return FluentPDO
      * @internal
      */

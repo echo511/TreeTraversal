@@ -44,13 +44,13 @@ class TreeCest
         $I->assertTrue($this->tree->isChildOf('F', 'A'));
         $I->assertTrue($this->tree->isChildOf('G', 'A'));
         $I->assertTrue($this->tree->isChildOf('H', 'A'));
-        
+
         $I->assertTrue($this->tree->isChildOf('F', 'E'));
         $I->assertTrue($this->tree->isChildOf('G', 'E'));
-        
+
         $I->assertTrue($this->tree->isChildOf('F', 'C'));
         $I->assertTrue($this->tree->isChildOf('G', 'C'));
-        
+
         $I->assertFalse($this->tree->isChildOf('A', 'A'));
         $I->assertFalse($this->tree->isChildOf('A', 'B'));
         $I->assertFalse($this->tree->isChildOf('A', 'C'));
@@ -58,6 +58,15 @@ class TreeCest
         $I->assertFalse($this->tree->isChildOf('A', 'E'));
         $I->assertFalse($this->tree->isChildOf('A', 'F'));
         $I->assertFalse($this->tree->isChildOf('A', 'G'));
+    }
+
+    public function testGetChildren(UnitTester $I)
+    {
+        $expected = ['B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        $I->assertEquals($expected, $this->tree->getChildren('A'));
+
+        $expected = ['F', 'G'];
+        $I->assertEquals($expected, $this->tree->getChildren('E'));
     }
 
 }
