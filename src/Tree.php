@@ -61,6 +61,7 @@ class Tree
                 $operation = new Operations\InsertBefore($insertId, $target, $this->config, $this);
                 break;
             case self::MODE_AFTER:
+                $operation = new Operations\InsertAfter($insertId, $target, $this->config, $this);
                 break;
             case self::MODE_UNDER:
                 break;
