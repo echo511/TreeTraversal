@@ -12,23 +12,16 @@ use FluentLiteral;
  * The nodes we want to move are considered moving.
  * The nodes that have to move because of the moving nodes are considered shifting.
  */
-abstract class MoveBase
+abstract class MoveBase extends Base
 {
 
-    const INDEX_LFT = 'lft';
-    const INDEX_RGT = 'rgt';
-
-    /*
-     * Direction constants are used as math coefficients.
-     */
-    const MOVE_DIRECTION_LEFT = 1; // because shifting nodes indexes increase values => hence 1 => DO NOT CHANGE!
-    const MOVE_DIRECTION_RIGHT = -1; // because shifting nodes indexes decrease values => hence -1 => DO NOT CHANGE!
+    const MOVE_DIRECTION_LEFT = 1;
+    const MOVE_DIRECTION_RIGHT = -1;
 
     /**
      * Indexed and depth of head node.
      * @var array
      */
-
     protected $head = [];
 
     /**
@@ -45,7 +38,7 @@ abstract class MoveBase
     /**
      * @var Tree
      */
-    private $tree;
+    protected $tree;
 
     /**
      * MoveUnderEnd constructor.
@@ -55,19 +48,11 @@ abstract class MoveBase
      * @param Tree $tree
      */
     public function __construct(array $head, array $target, array $config, Tree $tree) {
+        parent::__construct($target, $config, $tree);
         $this->head = $head;
         $this->target = $target;
         $this->config = $config;
         $this->tree = $tree;
-    }
-
-    /**
-     * Run the operation in transaction.
-     */
-    public function run() {
-        $this->tree->getFluent()->getPdo()->beginTransaction();
-        $this->doRun();
-        $this->tree->getFluent()->getPdo()->commit();
     }
 
     /**
@@ -140,83 +125,6 @@ abstract class MoveBase
      */
     protected function getMovingNodesRange() {
         return $this->head['rgt'] - $this->head['lft'] + 1;
-    }
-
-    /**
-     * IDs of shifting nodes.
-     * @return mixed
-     */
-    protected function getShiftingNodes() {
-        $limits = $this->getShiftingIndexesLimits();
-        return $this->getNodesBetween($limits['min'], $limits['max']);
-    }
-
-    /**
-     * Get the distance between indexes of shifting nodes.
-     * @return type
-     */
-    protected function getShiftingNodesRange() {
-        $limits = $this->getShiftingIndexesLimits();
-        return $limits['max'] - $limits['min'] + 1;
-    }
-
-    /**
-     * Get IDs of nodes between indexes including parent.
-     * @param $min
-     * @param $max
-     * @return array
-     */
-    protected function getNodesBetween($min, $max) {
-        $config = $this->config;
-        $query = $this->tree->table()
-                ->select(NULL)// fetch only id
-                ->select("$config[id] AS id")
-                ->where("($config[lft] >= :min AND $config[lft] <= :max) OR ($config[rgt] >= :min AND $config[rgt] <= :max)", [
-                    ':min' => $min,
-                    ':max' => $max,
-                ])
-                ->fetchAll();
-        $ids = array_map(function ($key) {
-            return $key['id'];
-        }, $query);
-        return $ids;
-    }
-
-    /**
-     * 
-     * @param array $nodes
-     * @param string $index self::INDEX_LFT | self::INDEX_RGT
-     * @param type $lftLimit
-     * @param type $rgtLimit
-     * @param type $value
-     */
-    protected function updateIndexes($nodes, $index, $lftLimit, $rgtLimit, $value) {
-        if (count($nodes) > 0) {
-            $config = $this->config;
-            $this->tree->getFluent()
-                    ->update($config['table'])
-                    ->set($config[$index], new FluentLiteral("$config[$index] + $value"))
-                    ->where($config['id'], $nodes)
-                    ->where("$config[$index] >= :lftLimit AND $config[$index] <= :rgtLimit", [
-                        ':lftLimit' => $lftLimit,
-                        ':rgtLimit' => $rgtLimit
-                    ])
-                    ->execute();
-        }
-    }
-
-    /**
-     * Update nodes depths.
-     * @param $nodes
-     * @param $value
-     */
-    protected function updateDepths($nodes, $value) {
-        $config = $this->config;
-        $this->tree->getFluent()
-                ->update($config['table'])
-                ->set($config['dpt'], new FluentLiteral("$config[dpt] + $value"))
-                ->where($config['id'], $nodes)
-                ->execute();
     }
 
 }

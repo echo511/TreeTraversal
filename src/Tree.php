@@ -53,15 +53,20 @@ class Tree
         $this->fluentPdo = new FluentPDO($pdo);
     }
 
-    public function insertNode($data, $targetId = NULL, $mode = self::MODE_UNDER) {
+    public function insertNode($targetId = NULL, $insertId = null, $mode = self::MODE_UNDER) {
+        $target = $this->getNode($targetId);
+
         switch ($mode) {
             case self::MODE_BEFORE:
+                $operation = new Operations\InsertBefore($insertId, $target, $this->config, $this);
                 break;
             case self::MODE_AFTER:
                 break;
             case self::MODE_UNDER:
                 break;
         }
+
+        $operation->run();
     }
 
     /**
