@@ -3,6 +3,7 @@
 namespace Echo511\TreeTraversal\Operations;
 
 use Echo511\TreeTraversal\Tree;
+use Exception;
 use FluentLiteral;
 
 abstract class Base
@@ -44,9 +45,18 @@ abstract class Base
      */
     public function run()
     {
-        $this->tree->getFluent()->getPdo()->beginTransaction();
-        $this->doRun();
-        $this->tree->getFluent()->getPdo()->commit();
+        $config = $this->config;
+        try {
+            $this->getFluent()->getPdo()->beginTransaction();
+            $this->tree->getFluent()->getPdo()->exec("LOCK TABLES $config[table] WRITE;");
+            $this->doRun();
+            $this->getFluent()->getPdo()->commit();
+            $this->tree->getFluent()->getPdo()->query("UNLOCK TABLES;");
+        } catch (Exception $ex) {
+            $this->getFluent()->getPdo()->rollBack();
+            $this->tree->getFluent()->getPdo()->query("UNLOCK TABLES;");
+            throw $ex;
+        }
     }
 
     abstract protected function doRun();
