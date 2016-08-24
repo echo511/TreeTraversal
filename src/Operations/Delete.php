@@ -9,16 +9,19 @@ class Delete extends Base
 
     protected $node = [];
 
-    public function __construct(array $node, array $config, Tree $tree) {
+    public function __construct(array $node, array $config, Tree $tree)
+    {
         parent::__construct([], $config, $tree);
         $this->node = $node;
     }
 
-    protected function doRun() {
+    protected function doRun()
+    {
         $this->deleteNodeAndChildren($this->node);
     }
 
-    protected function deleteNodeAndChildren($node) {
+    protected function deleteNodeAndChildren($node)
+    {
         $config = $this->config;
         $this->getFluent()
                 ->delete($config['table'])

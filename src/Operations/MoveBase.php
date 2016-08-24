@@ -47,7 +47,8 @@ abstract class MoveBase extends Base
      * @param array $config
      * @param Tree $tree
      */
-    public function __construct(array $head, array $target, array $config, Tree $tree) {
+    public function __construct(array $head, array $target, array $config, Tree $tree)
+    {
         parent::__construct($target, $config, $tree);
         $this->head = $head;
         $this->target = $target;
@@ -78,7 +79,8 @@ abstract class MoveBase extends Base
     /**
      * Run the logic.
      */
-    protected function doRun() {
+    protected function doRun()
+    {
         $config = $this->config;
         if ($this->target['id'] != $this->head['id']) {
             $this->canMove();
@@ -104,7 +106,8 @@ abstract class MoveBase extends Base
      * Throw exception if move cannot be performed.
      * @throws InvalidMoveExpcetion
      */
-    protected function canMove() {
+    protected function canMove()
+    {
         if ($this->tree->isChildOf($this->target, $this->head)) {
             throw new InvalidMoveExpcetion("Cannot move parent node under child node.");
         }
@@ -114,7 +117,8 @@ abstract class MoveBase extends Base
      * Get moving nodes IDs.
      * @return array
      */
-    protected function getMovingNodes() {
+    protected function getMovingNodes()
+    {
         $head = $this->head;
         return $this->getNodesBetween($head['lft'], $head['rgt']);
     }
@@ -123,7 +127,8 @@ abstract class MoveBase extends Base
      * Get the distance between indexes of moving nodes.
      * @return int
      */
-    protected function getMovingNodesRange() {
+    protected function getMovingNodesRange()
+    {
         return $this->head['rgt'] - $this->head['lft'] + 1;
     }
 

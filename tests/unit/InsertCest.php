@@ -15,7 +15,8 @@ class InsertCest
      */
     private $pdo;
 
-    public function _before(UnitTester $I) {
+    public function _before(UnitTester $I)
+    {
         $dsn = 'mysql:dbname=tree;host=mysql';
         $user = 'root';
         $password = '';
@@ -29,15 +30,17 @@ class InsertCest
         $this->tree = new Tree($config, $this->pdo);
     }
 
-    public function _after(UnitTester $I) {
+    public function _after(UnitTester $I)
+    {
         
     }
 
-    public function testInsertBefore(UnitTester $I) {
-        $this->tree->insertNode('C', 'I', \Echo511\TreeTraversal\Tree::MODE_BEFORE);
+    public function testInsertBefore(UnitTester $I)
+    {
+        $this->tree->insertNode('C', 'I', Tree::MODE_BEFORE);
         $sth = $this->pdo->prepare("SELECT title AS id, lft, rgt, dpt FROM tree");
         $sth->execute();
-        $actual = array_map('reset', $sth->fetchAll(\PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
+        $actual = array_map('reset', $sth->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
         $expected = [
             'A' => [
                 'lft' => 1,
@@ -88,11 +91,12 @@ class InsertCest
         $I->assertEquals($expected, $actual);
     }
 
-    public function testInsertAfter(UnitTester $I) {
-        $this->tree->insertNode('C', 'I', \Echo511\TreeTraversal\Tree::MODE_AFTER);
+    public function testInsertAfter(UnitTester $I)
+    {
+        $this->tree->insertNode('C', 'I', Tree::MODE_AFTER);
         $sth = $this->pdo->prepare("SELECT title AS id, lft, rgt, dpt FROM tree");
         $sth->execute();
-        $actual = array_map('reset', $sth->fetchAll(\PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
+        $actual = array_map('reset', $sth->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
         $expected = [
             'A' => [
                 'lft' => 1,
@@ -142,12 +146,13 @@ class InsertCest
         ];
         $I->assertEquals($expected, $actual);
     }
-    
-    public function testInsertUnderEnd(UnitTester $I) {
-        $this->tree->insertNode('E', 'I', \Echo511\TreeTraversal\Tree::MODE_UNDER);
+
+    public function testInsertUnderEnd(UnitTester $I)
+    {
+        $this->tree->insertNode('E', 'I', Tree::MODE_UNDER);
         $sth = $this->pdo->prepare("SELECT title AS id, lft, rgt, dpt FROM tree");
         $sth->execute();
-        $actual = array_map('reset', $sth->fetchAll(\PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
+        $actual = array_map('reset', $sth->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
         $expected = [
             'A' => [
                 'lft' => 1,

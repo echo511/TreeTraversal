@@ -32,7 +32,8 @@ abstract class Base
      * @param array $config
      * @param Tree $tree
      */
-    public function __construct(array $target, array $config, Tree $tree) {
+    public function __construct(array $target, array $config, Tree $tree)
+    {
         $this->target = $target;
         $this->config = $config;
         $this->tree = $tree;
@@ -41,7 +42,8 @@ abstract class Base
     /**
      * Run the operation in transaction.
      */
-    public function run() {
+    public function run()
+    {
         $this->tree->getFluent()->getPdo()->beginTransaction();
         $this->doRun();
         $this->tree->getFluent()->getPdo()->commit();
@@ -53,7 +55,8 @@ abstract class Base
      * IDs of shifting nodes.
      * @return mixed
      */
-    protected function getShiftingNodes() {
+    protected function getShiftingNodes()
+    {
         $limits = $this->getShiftingIndexesLimits();
         return $this->getNodesBetween($limits['min'], $limits['max']);
     }
@@ -62,7 +65,8 @@ abstract class Base
      * Get the distance between indexes of shifting nodes.
      * @return type
      */
-    protected function getShiftingNodesRange() {
+    protected function getShiftingNodesRange()
+    {
         $limits = $this->getShiftingIndexesLimits();
         return $limits['max'] - $limits['min'] + 1;
     }
@@ -73,7 +77,8 @@ abstract class Base
      * @param $max
      * @return array
      */
-    protected function getNodesBetween($min, $max) {
+    protected function getNodesBetween($min, $max)
+    {
         $config = $this->config;
         $query = $this->tree->table()
                 ->select(NULL)// fetch only id
@@ -97,7 +102,8 @@ abstract class Base
      * @param type $rgtLimit
      * @param type $value
      */
-    protected function updateIndexes($nodes, $index, $lftLimit, $rgtLimit, $value) {
+    protected function updateIndexes($nodes, $index, $lftLimit, $rgtLimit, $value)
+    {
         $config = $this->config;
         $query = $this->tree->getFluent()
                 ->update($config['table'])
@@ -123,7 +129,8 @@ abstract class Base
      * @param $nodes
      * @param $value
      */
-    protected function updateDepths($nodes, $value) {
+    protected function updateDepths($nodes, $value)
+    {
         $config = $this->config;
         $this->tree->getFluent()
                 ->update($config['table'])
@@ -132,7 +139,8 @@ abstract class Base
                 ->execute();
     }
 
-    protected function getFluent() {
+    protected function getFluent()
+    {
         return $this->tree->getFluent();
     }
 

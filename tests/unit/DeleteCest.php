@@ -15,7 +15,8 @@ class DeleteCest
      */
     private $pdo;
 
-    public function _before(UnitTester $I) {
+    public function _before(UnitTester $I)
+    {
         $dsn = 'mysql:dbname=tree;host=mysql';
         $user = 'root';
         $password = '';
@@ -29,11 +30,13 @@ class DeleteCest
         $this->tree = new Tree($config, $this->pdo);
     }
 
-    public function _after(UnitTester $I) {
+    public function _after(UnitTester $I)
+    {
         
     }
 
-    public function testDelete(UnitTester $I) {
+    public function testDelete(UnitTester $I)
+    {
         $this->tree->deleteNode('E');
         $sth = $this->pdo->prepare("SELECT title AS id, lft, rgt, dpt FROM tree");
         $sth->execute();

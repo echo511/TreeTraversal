@@ -48,12 +48,14 @@ class Tree
      * @param array $config
      * @param PDO $pdo
      */
-    public function __construct(array $config, PDO $pdo) {
+    public function __construct(array $config, PDO $pdo)
+    {
         $this->config = array_replace($this->config, $config);
         $this->fluentPdo = new FluentPDO($pdo);
     }
 
-    public function insertNode($targetId = NULL, $insertId = null, $mode = self::MODE_UNDER) {
+    public function insertNode($targetId = NULL, $insertId = null, $mode = self::MODE_UNDER)
+    {
         $target = $this->getNode($targetId);
 
         switch ($mode) {
@@ -77,7 +79,8 @@ class Tree
      * @param mixed $targetId
      * @param int $mode
      */
-    public function moveNode($headId, $targetId = NULL, $mode = self::MODE_UNDER) {
+    public function moveNode($headId, $targetId = NULL, $mode = self::MODE_UNDER)
+    {
         $head = $this->getNode($headId);
         $target = $this->getNode($targetId);
 
@@ -100,7 +103,8 @@ class Tree
      * Delete node and its children.
      * @param int $nodeId
      */
-    public function deleteNode($nodeId) {
+    public function deleteNode($nodeId)
+    {
         $node = $this->getNode($nodeId);
 
         $operation = new Operations\Delete($node, $this->config, $this);
@@ -112,7 +116,8 @@ class Tree
      * @param type $head
      * @param type $target
      */
-    public function isChildOf($head, $target) {
+    public function isChildOf($head, $target)
+    {
         if (!is_array($head)) {
             $head = $this->getNode($head);
         }
@@ -135,7 +140,8 @@ class Tree
      * @return FluentPDO
      * @internal
      */
-    public function getFluent() {
+    public function getFluent()
+    {
         return $this->fluentPdo;
     }
 
@@ -143,7 +149,8 @@ class Tree
      * @return SelectQuery
      * @internal
      */
-    public function table() {
+    public function table()
+    {
         return $this->fluentPdo->from($this->config['table']);
     }
 
@@ -152,7 +159,8 @@ class Tree
      * @param mixed $id
      * @return array
      */
-    protected function getNode($id) {
+    protected function getNode($id)
+    {
         $config = $this->config;
         return $this->table()
                         ->select(null)

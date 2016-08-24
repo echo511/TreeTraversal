@@ -5,7 +5,8 @@ namespace Echo511\TreeTraversal\Operations;
 class MoveUnderEnd extends MoveBase
 {
 
-    protected function getMoveDirection() {
+    protected function getMoveDirection()
+    {
         $head = $this->head;
         $target = $this->target;
         if ($head['rgt'] < $target['rgt']) {
@@ -14,7 +15,8 @@ class MoveUnderEnd extends MoveBase
         return self::MOVE_DIRECTION_LEFT;
     }
 
-    protected function getShiftingIndexesLimits() {
+    protected function getShiftingIndexesLimits()
+    {
         if ($this->getMoveDirection() == self::MOVE_DIRECTION_LEFT) {
             return [
                 'min' => $this->target['rgt'],
@@ -28,7 +30,8 @@ class MoveUnderEnd extends MoveBase
         }
     }
 
-    protected function getDepthModifier() {
+    protected function getDepthModifier()
+    {
         return $this->target['dpt'] - $this->head['dpt'] + 1;
     }
 

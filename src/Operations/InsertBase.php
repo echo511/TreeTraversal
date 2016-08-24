@@ -7,12 +7,14 @@ abstract class InsertBase extends Base
 
     protected $insertId = null;
 
-    public function __construct($insertId, array $target, array $config, \Echo511\TreeTraversal\Tree $tree) {
+    public function __construct($insertId, array $target, array $config, \Echo511\TreeTraversal\Tree $tree)
+    {
         parent::__construct($target, $config, $tree);
         $this->insertId = $insertId;
     }
 
-    protected function insertSingleNode($lft, $dpt) {
+    protected function insertSingleNode($lft, $dpt)
+    {
         $config = $this->config;
         $data = [
             $config['lft'] => $lft,
