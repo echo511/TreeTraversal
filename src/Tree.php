@@ -96,8 +96,15 @@ class Tree
         $operation->run();
     }
 
-    public function deleteNode($id) {
-        
+    /**
+     * Delete node and its children.
+     * @param int $nodeId
+     */
+    public function deleteNode($nodeId) {
+        $node = $this->getNode($nodeId);
+
+        $operation = new Operations\Delete($node, $this->config, $this);
+        $operation->run();
     }
 
     /**
