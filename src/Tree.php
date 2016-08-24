@@ -64,6 +64,7 @@ class Tree
                 $operation = new Operations\InsertAfter($insertId, $target, $this->config, $this);
                 break;
             case self::MODE_UNDER:
+                $operation = new Operations\InsertUnderEnd($insertId, $target, $this->config, $this);
                 break;
         }
 
