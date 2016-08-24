@@ -15,7 +15,7 @@ extensions:
 modules:
     config:
         Db:
-            dsn: 'mysql:dbname=tree;host=127.0.0.1;port=5100'
+            dsn: 'mysql:dbname=tree;host=mysql'
             user: 'root'
             password: ''
             dump: tests/_data/dump.sql
