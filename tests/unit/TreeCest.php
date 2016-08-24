@@ -70,6 +70,12 @@ class TreeCest
 
         $expected = [];
         $I->assertEquals($expected, $this->tree->getChildren('G'));
+
+        $expected = ['F', 'G'];
+        $I->assertEquals($expected, $this->tree->getChildren('C', 2));
+
+        $expected = ['D', 'E', 'F', 'G'];
+        $I->assertEquals($expected, $this->tree->getChildren('C', 2, true));
     }
 
     public function testGetParents(UnitTester $I)

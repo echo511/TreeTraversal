@@ -140,18 +140,30 @@ class Tree
     /**
      * Get IDs of children nodes.
      * @param mixed $headId
+     * @param int|null Eg. 1 - children, 2 - grandchildren.
+     * @param bool If enabled and $relativeDepth = 2 then select children and grandchildren.
      * @return array
      */
-    public function getChildren($headId)
+    public function getChildren($headId, $relativeDepth = null, $summarize = false)
     {
         $head = $this->getNode($headId);
         $config = $this->config;
-        $children = $this->table()
+        $query = $this->table()
                 ->select(null)
                 ->select("$config[id] AS id")
                 ->where("$config[lft] > ?", $head['lft'])
-                ->where("$config[rgt] < ?", $head['rgt'])
-                ->fetchAll();
+                ->where("$config[rgt] < ?", $head['rgt']);
+
+        if (!is_null($relativeDepth)) {
+            $absoluteDepth = $relativeDepth + $head['dpt'];
+            if ($summarize) {
+                $query->where("$config[dpt] <= ?", $absoluteDepth);
+            } else {
+                $query->where("$config[dpt] = ?", $absoluteDepth);
+            }
+        }
+
+        $children = $query->fetchAll();
 
         return array_map(function($key) {
             return $key['id'];
