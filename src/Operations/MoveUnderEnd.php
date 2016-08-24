@@ -35,4 +35,9 @@ class MoveUnderEnd extends MoveBase
         return $this->target['dpt'] - $this->head['dpt'] + 1;
     }
 
+    protected function getHeadNodeNewParent()
+    {
+        return $this->target['id'];
+    }
+
 }

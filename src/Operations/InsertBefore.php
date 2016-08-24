@@ -9,7 +9,7 @@ class InsertBefore extends InsertBase
     {
         $this->updateIndexes([], self::INDEX_LFT, $this->target['lft'], null, 2);
         $this->updateIndexes([], self::INDEX_RGT, $this->target['lft'], null, 2);
-        $this->insertSingleNode($this->target['lft'], $this->target['dpt']);
+        $this->insertSingleNode($this->target['lft'], $this->target['dpt'], $this->target['prt']);
     }
 
 }

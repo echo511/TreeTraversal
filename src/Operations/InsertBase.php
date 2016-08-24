@@ -13,13 +13,14 @@ abstract class InsertBase extends Base
         $this->insertId = $insertId;
     }
 
-    protected function insertSingleNode($lft, $dpt)
+    protected function insertSingleNode($lft, $dpt, $prt)
     {
         $config = $this->config;
         $data = [
             $config['lft'] => $lft,
             $config['rgt'] => $lft + 1,
             $config['dpt'] => $dpt,
+            $config['prt'] => $prt,
         ];
         if ($this->insertId !== null) {
             $data[$config['id']] = $this->insertId;

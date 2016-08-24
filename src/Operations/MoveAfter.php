@@ -35,4 +35,9 @@ class MoveAfter extends MoveBase
         return $this->target['dpt'] - $this->head['dpt'];
     }
 
+    protected function getHeadNodeNewParent()
+    {
+        return $this->target['prt'];
+    }
+
 }

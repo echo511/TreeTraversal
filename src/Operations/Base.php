@@ -105,7 +105,7 @@ abstract class Base
     protected function updateIndexes($nodes, $index, $lftLimit, $rgtLimit, $value)
     {
         $config = $this->config;
-        $query = $this->tree->getFluent()
+        $query = $this->getFluent()
                 ->update($config['table'])
                 ->set($config[$index], new FluentLiteral("$config[$index] + $value"));
 
@@ -132,10 +132,25 @@ abstract class Base
     protected function updateDepths($nodes, $value)
     {
         $config = $this->config;
-        $this->tree->getFluent()
+        $this->getFluent()
                 ->update($config['table'])
                 ->set($config['dpt'], new FluentLiteral("$config[dpt] + $value"))
                 ->where($config['id'], $nodes)
+                ->execute();
+    }
+
+    /**
+     * Set node the new parent.
+     * @param mixed $nodeId
+     * @param mixed $parent
+     */
+    protected function updateNodeParent($nodeId, $parent)
+    {
+        $config = $this->config;
+        $this->getFluent()
+                ->update($config['table'])
+                ->set($config['prt'], $parent)
+                ->where($config['id'], $nodeId)
                 ->execute();
     }
 

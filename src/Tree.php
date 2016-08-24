@@ -36,6 +36,7 @@ class Tree
         'lft' => 'lft', // left index
         'rgt' => 'rgt', // right index
         'dpt' => 'dpt', // depth
+        'prt' => 'prt', // parent - for emergency tree fixup
     ];
 
     /**
@@ -164,7 +165,7 @@ class Tree
         $config = $this->config;
         return $this->table()
                         ->select(null)
-                        ->select("$config[id] AS id, $config[lft] AS lft, $config[rgt] AS rgt, $config[dpt] AS dpt")
+                        ->select("$config[id] AS id, $config[lft] AS lft, $config[rgt] AS rgt, $config[dpt] AS dpt, $config[prt] AS prt")
                         ->where($config['id'], $id)
                         ->fetch();
     }

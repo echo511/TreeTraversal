@@ -77,6 +77,12 @@ abstract class MoveBase extends Base
     abstract protected function getDepthModifier();
 
     /**
+     * New parent of the head node after the head node has been moved.
+     * @return mixed ID of new parent.
+     */
+    abstract protected function getHeadNodeNewParent();
+
+    /**
      * Run the logic.
      */
     protected function doRun()
@@ -94,6 +100,7 @@ abstract class MoveBase extends Base
             $this->updateIndexes($movingNodes, self::INDEX_LFT, $this->head['lft'], $this->head['rgt'], $shiftingNodesRange * -1 * $this->getMoveDirection());
             $this->updateIndexes($movingNodes, self::INDEX_RGT, $this->head['lft'], $this->head['rgt'], $shiftingNodesRange * -1 * $this->getMoveDirection());
             $this->updateDepths($movingNodes, $this->getDepthModifier());
+            $this->updateNodeParent($this->head['id'], $this->getHeadNodeNewParent());
 
             // update shifting nodes
             $limits = $this->getShiftingIndexesLimits();
