@@ -35,6 +35,126 @@ class InsertCest
         
     }
 
+    protected function getActual()
+    {
+        $sth = $this->pdo->prepare("SELECT title AS id, lft, rgt, dpt, prt FROM tree");
+        $sth->execute();
+        return array_map('reset', $sth->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
+    }
+
+    protected function truncateTree()
+    {
+        $this->pdo->prepare("TRUNCATE tree")->execute();
+    }
+
+    public function testInsertIntoEmptyTree(UnitTester $I)
+    {
+        $expected = [
+            'A' => [
+                'lft' => 1,
+                'rgt' => 2,
+                'dpt' => 0,
+                'prt' => null,
+            ]
+        ];
+
+        $this->truncateTree();
+        $this->tree->insertNode(null, 'A');
+        $I->assertEquals($expected, $this->getActual());
+
+        $this->truncateTree();
+        $this->tree->insertNode(null, 'A', Tree::MODE_AFTER);
+        $I->assertEquals($expected, $this->getActual());
+
+        $this->truncateTree();
+        $this->tree->insertNode(null, 'A', Tree::MODE_BEFORE);
+        $I->assertEquals($expected, $this->getActual());
+    }
+
+    public function testInsertFlow(UnitTester $I)
+    {
+        $this->truncateTree();
+        $this->tree->insertNode(null, 'A');
+        $expected = [
+            'A' => [
+                'lft' => 1,
+                'rgt' => 2,
+                'dpt' => 0,
+                'prt' => null,
+            ]
+        ];
+        $I->assertEquals($expected, $this->getActual());
+
+        $this->tree->insertNode(null, 'B');
+        $expected = [
+            'A' => [
+                'lft' => 1,
+                'rgt' => 2,
+                'dpt' => 0,
+                'prt' => null,
+            ],
+            'B' => [
+                'lft' => 3,
+                'rgt' => 4,
+                'dpt' => 0,
+                'prt' => null,
+            ]
+        ];
+        $I->assertEquals($expected, $this->getActual());
+
+        $this->tree->insertNode(null, 'C', Tree::MODE_AFTER);
+        $expected = [
+            'A' => [
+                'lft' => 1,
+                'rgt' => 2,
+                'dpt' => 0,
+                'prt' => null,
+            ],
+            'B' => [
+                'lft' => 3,
+                'rgt' => 4,
+                'dpt' => 0,
+                'prt' => null,
+            ],
+            'C' => [
+                'lft' => 5,
+                'rgt' => 6,
+                'dpt' => 0,
+                'prt' => null,
+            ]
+        ];
+        $I->assertEquals($expected, $this->getActual());
+
+        $this->tree->insertNode(null, 'D', Tree::MODE_BEFORE);
+        $expected = [
+            'D' => [
+                'lft' => 1,
+                'rgt' => 2,
+                'dpt' => 0,
+                'prt' => null,
+            ],
+            'A' => [
+                'lft' => 3,
+                'rgt' => 4,
+                'dpt' => 0,
+                'prt' => null,
+            ],
+            'B' => [
+                'lft' => 5,
+                'rgt' => 6,
+                'dpt' => 0,
+                'prt' => null,
+            ],
+            'C' => [
+                'lft' => 7,
+                'rgt' => 8,
+                'dpt' => 0,
+                'prt' => null,
+            ]
+        ];
+        $I->assertEquals($expected, $this->getActual());
+    }
+
     public function testInsertBefore(UnitTester $I)
     {
         $this->tree->insertNode('C', 'I', Tree::MODE_BEFORE);

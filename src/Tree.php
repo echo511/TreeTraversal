@@ -51,11 +51,36 @@ class Tree
      */
     public function __construct(array $config, PDO $pdo)
     {
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->config = array_replace($this->config, $config);
         $this->fluentPdo = new FluentPDO($pdo);
     }
+    
+    public function getFirstRootNode()
+    {
+        $config = $this->config;
+        return $this->table()
+                        ->select(null)
+                        ->select("$config[id] AS id, $config[lft] AS lft, $config[rgt] AS rgt, $config[dpt] AS dpt, $config[prt] AS prt")
+                        ->where($config['dpt'], 0)
+                        ->orderBy($config['lft'])
+                        ->limit(1)
+                        ->fetch();
+    }
+    
+    public function getLastRootNode()
+    {
+        $config = $this->config;
+        return $this->table()
+                        ->select(null)
+                        ->select("$config[id] AS id, $config[lft] AS lft, $config[rgt] AS rgt, $config[dpt] AS dpt, $config[prt] AS prt")
+                        ->where($config['dpt'], 0)
+                        ->orderBy("$config[lft] DESC")
+                        ->limit(1)
+                        ->fetch();        
+    }
 
-    public function insertNode($targetId = NULL, $insertId = null, $mode = self::MODE_UNDER)
+    public function insertNode($targetId = null, $insertId = null, $mode = self::MODE_UNDER)
     {
         $target = $this->getNode($targetId);
 
@@ -80,7 +105,7 @@ class Tree
      * @param mixed $targetId
      * @param int $mode
      */
-    public function moveNode($headId, $targetId = NULL, $mode = self::MODE_UNDER)
+    public function moveNode($headId, $targetId = null, $mode = self::MODE_UNDER)
     {
         $head = $this->getNode($headId);
         $target = $this->getNode($targetId);

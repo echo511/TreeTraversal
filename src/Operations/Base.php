@@ -33,7 +33,7 @@ abstract class Base
      * @param array $config
      * @param Tree $tree
      */
-    public function __construct(array $target, array $config, Tree $tree)
+    public function __construct($target, array $config, Tree $tree)
     {
         $this->target = $target;
         $this->config = $config;
