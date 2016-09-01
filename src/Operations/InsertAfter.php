@@ -28,7 +28,7 @@ class InsertAfter extends InsertBase
 
         $this->updateIndexes([], self::INDEX_LFT, $this->target['rgt'] + 1, null, 2);
         $this->updateIndexes([], self::INDEX_RGT, $this->target['rgt'] + 1, null, 2);
-        $this->insertSingleNode($this->target['rgt'] + 1, $this->target['dpt'], $this->target['prt']);
+        return $this->insertSingleNode($this->target['rgt'] + 1, $this->target['dpt'], $this->target['prt']);
     }
 
 }

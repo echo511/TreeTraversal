@@ -55,7 +55,7 @@ class Tree
         $this->config = array_replace($this->config, $config);
         $this->fluentPdo = new FluentPDO($pdo);
     }
-    
+
     public function getFirstRootNode()
     {
         $config = $this->config;
@@ -67,7 +67,7 @@ class Tree
                         ->limit(1)
                         ->fetch();
     }
-    
+
     public function getLastRootNode()
     {
         $config = $this->config;
@@ -77,7 +77,7 @@ class Tree
                         ->where($config['dpt'], 0)
                         ->orderBy("$config[lft] DESC")
                         ->limit(1)
-                        ->fetch();        
+                        ->fetch();
     }
 
     public function insertNode($targetId = null, $insertId = null, $mode = self::MODE_UNDER, $additionalColumns = [])
@@ -96,7 +96,7 @@ class Tree
                 break;
         }
 
-        $operation->run();
+        return $operation->run();
     }
 
     /**

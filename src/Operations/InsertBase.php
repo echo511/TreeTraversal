@@ -28,8 +28,12 @@ abstract class InsertBase extends Base
         if ($this->insertId !== null) {
             $data[$config['id']] = $this->insertId;
         };
-        $this->getFluent()
+        $return = $this->getFluent()
                 ->insertInto($config['table'], $data)->execute();
+        if ($this->insertId !== null) {
+		return $this->insertId;
+	}
+	return $return;
     }
 
 }
