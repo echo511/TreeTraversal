@@ -80,19 +80,19 @@ class Tree
                         ->fetch();        
     }
 
-    public function insertNode($targetId = null, $insertId = null, $mode = self::MODE_UNDER)
+    public function insertNode($targetId = null, $insertId = null, $mode = self::MODE_UNDER, $additionalColumns = [])
     {
         $target = $this->getNode($targetId);
 
         switch ($mode) {
             case self::MODE_BEFORE:
-                $operation = new Operations\InsertBefore($insertId, $target, $this->config, $this);
+                $operation = new Operations\InsertBefore($insertId, $target, $this->config, $this, $additionalColumns);
                 break;
             case self::MODE_AFTER:
-                $operation = new Operations\InsertAfter($insertId, $target, $this->config, $this);
+                $operation = new Operations\InsertAfter($insertId, $target, $this->config, $this, $additionalColumns);
                 break;
             case self::MODE_UNDER:
-                $operation = new Operations\InsertUnderEnd($insertId, $target, $this->config, $this);
+                $operation = new Operations\InsertUnderEnd($insertId, $target, $this->config, $this, $additionalColumns);
                 break;
         }
 

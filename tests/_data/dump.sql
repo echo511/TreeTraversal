@@ -11,7 +11,8 @@ CREATE TABLE `tree` (
   `lft` int(11) NOT NULL,
   `rgt` int(11) NOT NULL,
   `dpt` int(11) NOT NULL,
-  `prt` varchar(255) COLLATE utf8_czech_ci NULL,
+  `prt` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
+  `additional` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
   PRIMARY KEY (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
