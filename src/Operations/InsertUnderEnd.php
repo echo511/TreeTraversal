@@ -20,13 +20,13 @@ class InsertUnderEnd extends InsertBase
                     'id' => null,
                     'rgt' => $lastRoot['rgt'] + 1,
                     'dpt' => - 1,
-                ];                
+                ];
             }
         }
 
         $this->updateIndexes([], self::INDEX_LFT, $this->target['rgt'], null, 2);
         $this->updateIndexes([], self::INDEX_RGT, $this->target['rgt'], null, 2);
-        $this->insertSingleNode($this->target['rgt'], $this->target['dpt'] + 1, $this->target['id']);
+        return $this->insertSingleNode($this->target['rgt'], $this->target['dpt'] + 1, $this->target['id']);
     }
 
 }

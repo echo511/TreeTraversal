@@ -32,7 +32,7 @@ class InsertCest
 
     public function _after(UnitTester $I)
     {
-        
+
     }
 
     protected function getActual($columns = 'title AS id, lft, rgt, dpt, prt')
@@ -47,7 +47,7 @@ class InsertCest
         $this->pdo->prepare("TRUNCATE tree")->execute();
     }
 
-    public function testInsertAdditionalColumns(UnitTester $I)
+    public function testInsertAdditionalColumnsAndReturnedValued(UnitTester $I)
     {
         $expected = [
             'A' => [
@@ -62,10 +62,13 @@ class InsertCest
         ];
 
         $this->truncateTree();
-        $this->tree->insertNode(null, 'A', Tree::MODE_AFTER, ['additional' => 'ADDITIONAL_A']);
-        $this->tree->insertNode(null, 'B', Tree::MODE_BEFORE, ['additional' => 'ADDITIONAL_B']);
-        $this->tree->insertNode(null, 'C', Tree::MODE_UNDER, ['additional' => 'ADDITIONAL_C']);
+        $returnedA = $this->tree->insertNode(null, 'A', Tree::MODE_AFTER, ['additional' => 'ADDITIONAL_A']);
+        $returnedB = $this->tree->insertNode(null, 'B', Tree::MODE_BEFORE, ['additional' => 'ADDITIONAL_B']);
+        $returnedC = $this->tree->insertNode(null, 'C', Tree::MODE_UNDER, ['additional' => 'ADDITIONAL_C']);
         $I->assertEquals($expected, $this->getActual('title AS id, additional'));
+        $I->assertEquals('A', $returnedA);
+        $I->assertEquals('B', $returnedB);
+        $I->assertEquals('C', $returnedC);
     }
 
     public function testInsertIntoEmptyTree(UnitTester $I)

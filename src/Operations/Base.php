@@ -49,9 +49,10 @@ abstract class Base
         try {
             $this->getFluent()->getPdo()->beginTransaction();
             $this->tree->getFluent()->getPdo()->exec("LOCK TABLES $config[table] WRITE;");
-            $this->doRun();
+            $return = $this->doRun();
             $this->getFluent()->getPdo()->commit();
             $this->tree->getFluent()->getPdo()->query("UNLOCK TABLES;");
+            return $return;
         } catch (Exception $ex) {
             $this->getFluent()->getPdo()->rollBack();
             $this->tree->getFluent()->getPdo()->query("UNLOCK TABLES;");
@@ -105,7 +106,7 @@ abstract class Base
     }
 
     /**
-     * 
+     *
      * @param array $nodes
      * @param string $index self::INDEX_LFT | self::INDEX_RGT
      * @param type $lftLimit
