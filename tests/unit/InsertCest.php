@@ -35,9 +35,9 @@ class InsertCest
         
     }
 
-    protected function getActual()
+    protected function getActual($columns = 'title AS id, lft, rgt, dpt, prt')
     {
-        $sth = $this->pdo->prepare("SELECT title AS id, lft, rgt, dpt, prt FROM tree");
+        $sth = $this->pdo->prepare("SELECT $columns FROM tree");
         $sth->execute();
         return array_map('reset', $sth->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
     }
@@ -45,6 +45,27 @@ class InsertCest
     protected function truncateTree()
     {
         $this->pdo->prepare("TRUNCATE tree")->execute();
+    }
+
+    public function testInsertAdditionalColumns(UnitTester $I)
+    {
+        $expected = [
+            'A' => [
+                'additional' => 'ADDITIONAL_A'
+            ],
+            'B' => [
+                'additional' => 'ADDITIONAL_B'
+            ],
+            'C' => [
+                'additional' => 'ADDITIONAL_C'
+            ]
+        ];
+
+        $this->truncateTree();
+        $this->tree->insertNode(null, 'A', Tree::MODE_AFTER, ['additional' => 'ADDITIONAL_A']);
+        $this->tree->insertNode(null, 'B', Tree::MODE_BEFORE, ['additional' => 'ADDITIONAL_B']);
+        $this->tree->insertNode(null, 'C', Tree::MODE_UNDER, ['additional' => 'ADDITIONAL_C']);
+        $I->assertEquals($expected, $this->getActual('title AS id, additional'));
     }
 
     public function testInsertIntoEmptyTree(UnitTester $I)
